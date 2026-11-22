@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>龙族卡塞尔之门智能百科</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      padding: 20px 15px;
+      text-align: center;
+      border-bottom: 2px solid #4a69bd;
+    }
+    header h1 {
+      font-size: 22px;
+      margin-bottom: 5px;
+      color: #fff;
+    }
+    header p {
+      font-size: 13px;
+      color: #aaa;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 8px;
+      background: #1a1a2e;
+    }
+    .tab-btn {
+      background: #2a2a3e;
+      color: #ddd;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .tab-btn.active {
+      background: #4a69bd;
+      color: #fff;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+    .card {
+      background: #1e1e32;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #fff;
+    }
+    .card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #bbb;
+    }
+    .list-item {
+      background: #252540;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .list-item:hover {
+      background: #2f2f50;
+    }
+    .tag {
+      display: inline-block;
+      background: #4a69bd;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-right: 5px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: 1px solid #444;
+      background: #252540;
+      color: #fff;
+      font-size: 14px;
+    }
+    button {
+      background: #4a69bd;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover { background: #5a79cd; }
+    .hidden { display: none; }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #aaa;
+    }
+    .chat-message {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      max-width: 85%;
+      word-wrap: break-word;
+      font-size: 14px;
+    }
+    .user-msg {
+      background: #4a69bd;
+      color: #fff;
+      margin-left: auto;
+      text-align: right;
+    }
+    .ai-msg {
+      background: #2a2a3e;
+      color: #ddd;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>龙族卡塞尔之门</h1>
+    <p>智能百科 & AI配队助手</p>
+  </header>
+  <nav>
+    <button class="tab-btn active" onclick="showTab('characters')">角色图鉴</button>
+    <button class="tab-btn" onclick="showTab('glossary')">术语百科</button>
+    <button class="tab-btn" onclick="showTab('ai-modules')">AI模块</button>
+    <button class="tab-btn" onclick="showTab('chat')">AI问答</button>
+    <button class="tab-btn" onclick="showTab('version')">版本更新</button>
+  </nav>
+  <div class="container">
+    <div id="characters-tab">
+      <h2 style="margin-bottom:10px;">角色列表</h2>
+      <div id="character-list"></div>
+    </div>
+    <div id="glossary-tab" class="hidden">
+      <h2 style="margin-bottom:10px;">术语百科</h2>
+      <div id="glossary-list"></div>
+    </div>
+    <div id="ai-modules-tab" class="hidden">
+      <h2 style="margin-bottom:10px;">人工智能模块</h2>
+      <div id="ai-modules-list"></div>
+    </div>
+    <div id="chat-tab" class="hidden">
+      <h2 style="margin-bottom:10px;">AI配队助手</h2>
+      <div id="chat-box" style="height:400px; overflow-y:auto; background:#1a1a2e; padding:10px; border-radius:10px;"></div>
+      <input type="text" id="question-input" placeholder="例如：楚子航和夏弥组队有什么增益？" onkeydown="if(event.key==='Enter') sendQuestion()">
+      <button onclick="sendQuestion()">发送</button>
+    </div>
+    <div id="version-tab" class="hidden">
+      <h2 style="margin-bottom:10px;">版本更新日志</h2>
+      <div id="version-info"></div>
+    </div>
+    <div id="character-detail" class="hidden">
+      <button onclick="backToList()" style="margin-bottom:10px;">← 返回列表</button>
+      <div id="character-detail-content"></div>
+    </div>
+  </div>
+
+  <script>
+    let data = { characters: [], glossary: [], ai_modules: [], version: {} };
+    const API_KEY = localStorage.getItem('deepseek_api_key') || '';
+
+    async function fetchData() {
+      try {
+        const res = await fetch('./data.json');
+        data = await res.json();
+      } catch (e) {
+        console.error('加载数据失败', e);
+      }
+    }
+
+    function showTab(tabName) {
+      const tabs = ['characters-tab', 'glossary-tab', 'ai-modules-tab', 'chat-tab', 'version-tab', 'character-detail'];
+      tabs.forEach(t => document.getElementById(t).classList.add('hidden'));
+      document.getElementById(tabName + '-tab').classList.remove('hidden');
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      if (tabName === 'characters') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        loadCharacters();
+      } else if (tabName === 'glossary') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        loadGlossary();
+      } else if (tabName === 'ai-modules') {
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        loadAIModules();
+      } else if (tabName === 'chat') {
+        document.querySelectorAll('.tab-btn')[3].classList.add('active');
+      } else if (tabName === 'version') {
+        document.querySelectorAll('.tab-btn')[4].classList.add('active');
+        loadVersion();
+      }
+    }
+
+    function loadCharacters() {
+      const list = document.getElementById('character-list');
+      if (!data.characters || data.characters.length === 0) {
+        list.innerHTML = '<p>暂无角色数据</p>';
+        return;
+      }
+      list.innerHTML = data.characters.map(c => `
+        <div class="list-item" onclick="showCharacterDetail(${c.id})">
+          <strong style="color:#fff;">${c.name}</strong>
+          <span class="tag">${c.rarity}</span>
+          <span class="tag">${c.role_type}</span>
+          <p style="margin-top:5px; font-size:12px; color:#aaa;">${c.plain_analysis.slice(0, 50)}...</p>
+        </div>
+      `).join('');
+    }
+
+    function showCharacterDetail(id) {
+      const character = data.characters.find(c => c.id === id);
+      if (!character) return;
+      const content = document.getElementById('character-detail-content');
+      content.innerHTML = `
+        <div class="card">
+          <h3>${character.name}</h3>
+          <p><strong>稀有度：</strong>${character.rarity}</p>
+          <p><strong>定位：</strong>${character.role_type}</p>
+          <p><strong>标签：</strong>${(character.tags || []).join(', ')}</p>
+          <p><strong>角色简介：</strong>${character.description || '暂无'}</p>
+          <p><strong>白话解析：</strong>${character.plain_analysis || '暂无'}</p>
+          <p><strong>PVE评分：</strong>${character.pve_rating}  <strong>PVP评分：</strong>${character.pvp_rating}</p>
+        </div>
+        <div class="card">
+          <h3>技能列表</h3>
+          ${(character.skills || []).map(s => `
+            <div style="margin-bottom:10px;">
+              <strong>${s.name}</strong>
+              <p style="font-size:13px; color:#ccc;">官方描述：${s.official_desc}</p>
+              <p style="font-size:13px; color:#ccc;">白话解析：${s.plain_desc}</p>
+            </div>
+          `).join('')}
+        </div>
+        <div class="card">
+          <h3>联动关系</h3>
+          ${(character.synergies || []).map(syn => `
+            <div style="margin-bottom:10px;">
+              <strong>与 ${syn.other_character_name} 联动</strong>
+              <p style="font-size:13px; color:#ccc;">触发条件：${syn.trigger_condition}</p>
+              <p style="font-size:13px; color:#ccc;">增益效果：${syn.buff_effect}</p>
+              <p style="font-size:12px; color:#aaa;">联动评分：${syn.synergy_score} - ${syn.description}</p>
+            </div>
+          `).join('') || '<p>暂无联动数据</p>'}
+        </div>
+      `;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('[id$="-tab"]').forEach(t => t.classList.add('hidden'));
+      document.getElementById('character-detail').classList.remove('hidden');
+    }
+
+    function backToList() {
+      document.getElementById('character-detail').classList.add('hidden');
+      showTab('characters');
+    }
+
+    function loadGlossary() {
+      const list = document.getElementById('glossary-list');
+      if (!data.glossary || data.glossary.length === 0) {
+        list.innerHTML = '<p>暂无术语数据</p>';
+        return;
+      }
+      list.innerHTML = data.glossary.map(t => `
+        <div class="card">
+          <strong style="font-size:16px; color:#fff;">${t.term}</strong>
+          <span class="tag">${t.category}</span>
+          <p style="margin-top:5px;">${t.explanation}</p>
+        </div>
+      `).join('');
+    }
+
+    function loadAIModules() {
+      const list = document.getElementById('ai-modules-list');
+      if (!data.ai_modules || data.ai_modules.length === 0) {
+        list.innerHTML = '<p>暂无AI模块数据</p>';
+        return;
+      }
+      list.innerHTML = data.ai_modules.map(m => `
+        <div class="card">
+          <h3>${m.module_name}</h3>
+          <p><strong>解锁条件：</strong>${m.unlock_condition}</p>
+          <p><strong>对局效果：</strong>${m.battle_effect}</p>
+          <p><strong>升级路径：</strong>${m.upgrade_path}</p>
+          <p><strong>最佳搭配：</strong>${(m.best_synergy || []).join(', ')}</p>
+          <p>${m.description}</p>
+        </div>
+      `).join('');
+    }
+
+    function loadVersion() {
+      const info = document.getElementById('version-info');
+      if (!data.version) {
+        info.innerHTML = '<p>暂无版本信息</p>';
+        return;
+      }
+      info.innerHTML = `
+        <div class="card">
+          <h3>版本 ${data.version.version}</h3>
+          <p style="font-size:12px;">更新时间：${data.version.update_time}</p>
+          <p>${data.version.change_log || '暂无更新日志'}</p>
+        </div>
+      `;
+    }
+
+    async function sendQuestion() {
+      const input = document.getElementById('question-input');
+      const question = input.value.trim();
+      if (!question) return;
+      if (!API_KEY) {
+        alert('请先设置 DeepSeek API Key（可以在页面底部添加）');
+        return;
+      }
+      const chatBox = document.getElementById('chat-box');
+      chatBox.innerHTML += `<div class="chat-message user-msg">${question}</div>`;
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+      try {
+        const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'deepseek-chat',
+            messages: [
+              { role: 'system', content: '你是《龙族：卡塞尔之门》的攻略助手，请基于你的知识回答用户问题，如果不知道就说不知道。' },
+              { role: 'user', content: question }
+            ],
+            temperature: 0.7
+          })
+        });
+        const result = await res.json();
+        const answer = result.choices?.[0]?.message?.content || 'AI暂时无法回答';
+        chatBox.innerHTML += `<div class="chat-message ai-msg">${answer}</div>`;
+      } catch (e) {
+        chatBox.innerHTML += `<div class="chat-message ai-msg">网络错误，请重试</div>`;
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    (async function() {
+      await fetchData();
+      loadCharacters();
+      const container = document.querySelector('.container');
+      const keyDiv = document.createElement('div');
+      keyDiv.style.marginTop = '20px';
+      keyDiv.innerHTML = `
+        <details>
+          <summary style="cursor:pointer;color:#aaa;">设置 DeepSeek API Key（点击展开）</summary>
+          <input type="text" id="api-key-input" placeholder="输入你的 DeepSeek API Key（sk-开头）" value="${API_KEY}">
+          <button onclick="saveApiKey()">保存</button>
+        </details>
+      `;
+      container.appendChild(keyDiv);
+    })();
+
+    function saveApiKey() {
+      const key = document.getElementById('api-key-input').value.trim();
+      localStorage.setItem('deepseek_api_key', key);
+      alert('API Key 已保存，刷新后生效');
+    }
+  </script>
+</body>
+</html>
