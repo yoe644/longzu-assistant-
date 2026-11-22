@@ -1,0 +1,93 @@
+{
+  "characters": [
+    {
+      "id": 1,
+      "name": "楚子航",
+      "rarity": "SSR",
+      "role_type": "输出",
+      "tags": ["高爆发", "单体"],
+      "description": "狮心会会长，言灵·君焰。",
+      "plain_analysis": "强力火系输出，大招能造成大量单体伤害，适合作为主C培养。",
+      "pve_rating": 9.0,
+      "pvp_rating": 8.5,
+      "skills": [
+        {
+          "name": "君焰",
+          "official_desc": "造成300%攻击力的火属性伤害，并点燃目标。",
+          "plain_desc": "打一下很痛，还能让敌人持续掉血。",
+          "mechanics": ["点燃", "高倍率"],
+          "pve_score": 9.5,
+          "pvp_score": 8.5
+        }
+      ],
+      "synergies": [
+        {
+          "other_character_name": "夏弥",
+          "trigger_condition": "楚子航与夏弥同时上场时触发。",
+          "buff_effect": "楚子航暴击率提升15%，夏弥技能冷却减少1回合。",
+          "synergy_score": 9.0,
+          "description": "两人配合默契，输出和辅助相得益彰。"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "夏弥",
+      "rarity": "SSR",
+      "role_type": "辅助",
+      "tags": ["增伤", "控制"],
+      "description": "神秘少女，真实身份为大地与山之王。",
+      "plain_analysis": "风系辅助，能为队友增加伤害，并有一定控制能力。",
+      "pve_rating": 8.0,
+      "pvp_rating": 9.0,
+      "skills": [
+        {
+          "name": "风王之瞳",
+          "official_desc": "提升全体队友20%攻击力，持续2回合。",
+          "plain_desc": "全队攻击力上升，持续两回合。",
+          "mechanics": ["群体增益"],
+          "pve_score": 8.5,
+          "pvp_score": 9.0
+        }
+      ],
+      "synergies": [
+        {
+          "other_character_name": "楚子航",
+          "trigger_condition": "楚子航与夏弥同时上场时触发。",
+          "buff_effect": "楚子航暴击率提升15%，夏弥技能冷却减少1回合。",
+          "synergy_score": 9.0,
+          "description": "两人配合默契，输出和辅助相得益彰。"
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "言灵",
+      "category": "战斗",
+      "explanation": "角色特有的超自然能力，相当于技能。",
+      "related_to": ["所有角色"]
+    },
+    {
+      "term": "血统",
+      "category": "角色",
+      "explanation": "角色的血脉等级，影响基础属性。",
+      "related_to": ["角色养成"]
+    }
+  ],
+  "ai_modules": [
+    {
+      "module_name": "诺玛",
+      "unlock_condition": "完成主线第二章解锁",
+      "battle_effect": "对局内自动分析敌方弱点，提升全队破甲效率。",
+      "upgrade_path": "使用AI核心升级，提升分析速度。",
+      "best_synergy": ["楚子航", "夏弥"],
+      "description": "游戏内人工智能辅助系统，可在战斗中提供战术建议。"
+    }
+  ],
+  "version": {
+    "version": "1.0.0",
+    "update_time": "2024-01-01",
+    "change_log": "初始版本，包含示例角色数据。"
+  }
+}
