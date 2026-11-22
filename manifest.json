@@ -1,0 +1,17 @@
+{
+  "name": "龙族·卡塞尔之门 神级助手",
+  "short_name": "龙族助手",
+  "description": "全知全能的《龙族：卡塞尔之门》攻略与AI配队助手",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f0f1a",
+  "theme_color": "#0f0f1a",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230f0f1a'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='%234a69bd' font-family='sans-serif'>龙</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
