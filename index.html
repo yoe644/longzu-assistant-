@@ -1,9 +1,21 @@
+---
+
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>龙族卡塞尔之门智能百科</title>
+  <title>龙族·卡塞尔之门 神级助手</title>
+
+  <!-- PWA 相关 meta 标签（即使没有 manifest 和 sw，这些标签也能改善体验） -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0f0f1a">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230f0f1a'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='%234a69bd' font-family='sans-serif'>龙</text></svg>">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="龙族助手">
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -11,6 +23,7 @@
       background: #0f0f1a;
       color: #e0e0e0;
       min-height: 100vh;
+      padding-bottom: 30px;
     }
     header {
       background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -19,7 +32,7 @@
       border-bottom: 2px solid #4a69bd;
     }
     header h1 {
-      font-size: 22px;
+      font-size: 24px;
       margin-bottom: 5px;
       color: #fff;
     }
@@ -50,7 +63,7 @@
       color: #fff;
     }
     .container {
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
       padding: 15px;
     }
@@ -137,43 +150,78 @@
       color: #ddd;
       margin-right: auto;
     }
+    .mode-btn {
+      background: #2a2a3e;
+      color: #ddd;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 15px;
+      margin: 0 5px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .mode-btn.active {
+      background: #e67e22;
+      color: #fff;
+    }
+    details {
+      margin-top: 20px;
+      color: #aaa;
+    }
+    summary {
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>龙族卡塞尔之门</h1>
-    <p>智能百科 & AI配队助手</p>
+    <h1>龙族·卡塞尔之门</h1>
+    <p>神级助手 · 全知全能 · 实时扩容</p>
   </header>
   <nav>
     <button class="tab-btn active" onclick="showTab('characters')">角色图鉴</button>
     <button class="tab-btn" onclick="showTab('glossary')">术语百科</button>
     <button class="tab-btn" onclick="showTab('ai-modules')">AI模块</button>
-    <button class="tab-btn" onclick="showTab('chat')">AI问答</button>
-    <button class="tab-btn" onclick="showTab('version')">版本更新</button>
+    <button class="tab-btn" onclick="showTab('chat')">AI配队</button>
+    <button class="tab-btn" onclick="showTab('update')">更新中心</button>
   </nav>
   <div class="container">
+    <!-- 角色图鉴 -->
     <div id="characters-tab">
-      <h2 style="margin-bottom:10px;">角色列表</h2>
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">
+        <input type="text" id="search-input" placeholder="搜索本地角色..." onkeyup="filterCharacters()" style="flex:1;">
+        <button onclick="clearSearch()">清除</button>
+      </div>
       <div id="character-list"></div>
     </div>
+    <!-- 术语百科 -->
     <div id="glossary-tab" class="hidden">
       <h2 style="margin-bottom:10px;">术语百科</h2>
       <div id="glossary-list"></div>
     </div>
+    <!-- AI模块 -->
     <div id="ai-modules-tab" class="hidden">
       <h2 style="margin-bottom:10px;">人工智能模块</h2>
       <div id="ai-modules-list"></div>
     </div>
+    <!-- AI配队 -->
     <div id="chat-tab" class="hidden">
       <h2 style="margin-bottom:10px;">AI配队助手</h2>
+      <div style="display:flex; justify-content:center; margin-bottom:10px;">
+        <button class="mode-btn" id="mode-tactics" onclick="setChatMode('tactics')">⚔️ 战术提问</button>
+        <button class="mode-btn" id="mode-character" onclick="setChatMode('character')">👤 角色查询</button>
+      </div>
       <div id="chat-box" style="height:400px; overflow-y:auto; background:#1a1a2e; padding:10px; border-radius:10px;"></div>
-      <input type="text" id="question-input" placeholder="例如：楚子航和夏弥组队有什么增益？" onkeydown="if(event.key==='Enter') sendQuestion()">
-      <button onclick="sendQuestion()">发送</button>
+      <input type="text" id="question-input" placeholder="请输入你的问题或角色名..." onkeydown="if(event.key==='Enter') sendQuestion()">
+      <button onclick="sendQuestion()" style="margin-top:5px;">发送</button>
     </div>
-    <div id="version-tab" class="hidden">
-      <h2 style="margin-bottom:10px;">版本更新日志</h2>
-      <div id="version-info"></div>
+    <!-- 更新中心 -->
+    <div id="update-tab" class="hidden">
+      <h2 style="margin-bottom:10px;">版本更新中心</h2>
+      <button onclick="fetchLatestUpdate()">🔥 一键获取最新情报</button>
+      <div id="update-info" style="margin-top:10px;"></div>
     </div>
+    <!-- 角色详情（动态显示） -->
     <div id="character-detail" class="hidden">
       <button onclick="backToList()" style="margin-bottom:10px;">← 返回列表</button>
       <div id="character-detail-content"></div>
@@ -181,88 +229,146 @@
   </div>
 
   <script>
-    let data = { characters: [], glossary: [], ai_modules: [], version: {} };
-    const API_KEY = localStorage.getItem('deepseek_api_key') || '';
+    // ========== 全局变量 ==========
+    let baseData = { characters: [], glossary: [], ai_modules: [], version: {} };
+    let allCharacters = [];          // 基础库 + 缓存库合并
+    let currentChatMode = 'tactics';
+    const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
-    async function fetchData() {
-      try {
-        const res = await fetch('./data.json');
-        data = await res.json();
-      } catch (e) {
-        console.error('加载数据失败', e);
-      }
+    // ========== PWA 注册（如果 sw.js 不存在会静默失败，不影响主功能） ==========
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('SW registered'))
+          .catch(err => console.log('SW registration failed', err));
+      });
     }
 
+    // ========== 工具函数 ==========
+    function getStoredCharacters() {
+      try {
+        return JSON.parse(localStorage.getItem('longzu_custom_characters') || '[]');
+      } catch { return []; }
+    }
+    function saveStoredCharacters(arr) {
+      localStorage.setItem('longzu_custom_characters', JSON.stringify(arr));
+    }
+    function getStoredUpdate() {
+      try {
+        return JSON.parse(localStorage.getItem('longzu_latest_update') || 'null');
+      } catch { return null; }
+    }
+    function saveStoredUpdate(obj) {
+      localStorage.setItem('longzu_latest_update', JSON.stringify(obj));
+    }
+    function getApiKey() {
+      return localStorage.getItem('deepseek_api_key') || '';
+    }
+
+    function mergeCharacters() {
+      const builtIn = baseData.characters || [];
+      const custom = getStoredCharacters();
+      allCharacters = [...builtIn, ...custom.filter(c => !builtIn.some(b => b.name === c.name))];
+    }
+
+    function fetchData() {
+      return fetch('./data.json')
+        .then(res => res.json())
+        .then(data => {
+          baseData = data;
+          mergeCharacters();
+          renderCharacters();
+        })
+        .catch(err => console.error('加载 data.json 失败', err));
+    }
+
+    // ========== 标签切换 ==========
     function showTab(tabName) {
-      const tabs = ['characters-tab', 'glossary-tab', 'ai-modules-tab', 'chat-tab', 'version-tab', 'character-detail'];
+      const tabs = ['characters-tab','glossary-tab','ai-modules-tab','chat-tab','update-tab','character-detail'];
       tabs.forEach(t => document.getElementById(t).classList.add('hidden'));
       document.getElementById(tabName + '-tab').classList.remove('hidden');
+      // 按钮高亮
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      if (tabName === 'characters') {
-        document.querySelectorAll('.tab-btn')[0].classList.add('active');
-        loadCharacters();
-      } else if (tabName === 'glossary') {
-        document.querySelectorAll('.tab-btn')[1].classList.add('active');
-        loadGlossary();
-      } else if (tabName === 'ai-modules') {
-        document.querySelectorAll('.tab-btn')[2].classList.add('active');
-        loadAIModules();
-      } else if (tabName === 'chat') {
-        document.querySelectorAll('.tab-btn')[3].classList.add('active');
-      } else if (tabName === 'version') {
-        document.querySelectorAll('.tab-btn')[4].classList.add('active');
-        loadVersion();
-      }
+      const map = { characters:0, glossary:1, 'ai-modules':2, chat:3, update:4 };
+      if (map[tabName] !== undefined) document.querySelectorAll('.tab-btn')[map[tabName]].classList.add('active');
+      // 触发渲染
+      if (tabName === 'characters') renderCharacters();
+      if (tabName === 'glossary') renderGlossary();
+      if (tabName === 'ai-modules') renderAIModules();
+      if (tabName === 'update') renderUpdate();
+      if (tabName === 'chat') {}
     }
 
-    function loadCharacters() {
+    // ========== 角色图鉴 ==========
+    function renderCharacters(filterText = '') {
       const list = document.getElementById('character-list');
-      if (!data.characters || data.characters.length === 0) {
+      if (!allCharacters.length) {
         list.innerHTML = '<p>暂无角色数据</p>';
         return;
       }
-      list.innerHTML = data.characters.map(c => `
-        <div class="list-item" onclick="showCharacterDetail(${c.id})">
+      const filtered = filterText ? allCharacters.filter(c => c.name.includes(filterText)) : allCharacters;
+      list.innerHTML = filtered.map(c => `
+        <div class="list-item" onclick="showCharacterDetail('${c.name}')">
           <strong style="color:#fff;">${c.name}</strong>
-          <span class="tag">${c.rarity}</span>
-          <span class="tag">${c.role_type}</span>
-          <p style="margin-top:5px; font-size:12px; color:#aaa;">${c.plain_analysis.slice(0, 50)}...</p>
+          <span class="tag">${c.rarity || '未知'}</span>
+          <span class="tag">${c.role_type || '定位未知'}</span>
+          <p style="margin-top:5px; font-size:12px; color:#aaa;">${(c.plain_analysis || '').slice(0, 50)}...</p>
         </div>
-      `).join('');
+      `).join('') || '<p>无匹配角色</p>';
     }
 
-    function showCharacterDetail(id) {
-      const character = data.characters.find(c => c.id === id);
-      if (!character) return;
+    function filterCharacters() {
+      const kw = document.getElementById('search-input').value.trim();
+      renderCharacters(kw);
+    }
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      renderCharacters();
+    }
+
+    function showCharacterDetail(name) {
+      const character = allCharacters.find(c => c.name === name);
+      if (!character) {
+        alert('未找到该角色，请尝试在 AI 页面查询');
+        return;
+      }
       const content = document.getElementById('character-detail-content');
       content.innerHTML = `
         <div class="card">
           <h3>${character.name}</h3>
-          <p><strong>稀有度：</strong>${character.rarity}</p>
-          <p><strong>定位：</strong>${character.role_type}</p>
+          <p><strong>稀有度：</strong>${character.rarity || '未知'}</p>
+          <p><strong>定位：</strong>${character.role_type || '未知'}</p>
           <p><strong>标签：</strong>${(character.tags || []).join(', ')}</p>
           <p><strong>角色简介：</strong>${character.description || '暂无'}</p>
           <p><strong>白话解析：</strong>${character.plain_analysis || '暂无'}</p>
-          <p><strong>PVE评分：</strong>${character.pve_rating}  <strong>PVP评分：</strong>${character.pvp_rating}</p>
+          <p><strong>PVE评分：</strong>${character.pve_rating || 'N/A'}  <strong>PVP评分：</strong>${character.pvp_rating || 'N/A'}</p>
         </div>
         <div class="card">
           <h3>技能列表</h3>
           ${(character.skills || []).map(s => `
             <div style="margin-bottom:10px;">
               <strong>${s.name}</strong>
-              <p style="font-size:13px; color:#ccc;">官方描述：${s.official_desc}</p>
-              <p style="font-size:13px; color:#ccc;">白话解析：${s.plain_desc}</p>
+              <p style="font-size:13px; color:#ccc;">官方描述：${s.official_desc || '无'}</p>
+              <p style="font-size:13px; color:#ccc;">白话解析：${s.plain_desc || '无'}</p>
             </div>
-          `).join('')}
+          `).join('') || '<p>暂无技能数据</p>'}
+        </div>
+        <div class="card">
+          <h3>推荐启灵</h3>
+          <p>${(character.recommended_awakening || []).join('、') || '暂无'}</p>
+        </div>
+        <div class="card">
+          <h3>推荐龙纹</h3>
+          <p>${(character.recommended_dragon_marks || []).join('、') || '暂无'}</p>
         </div>
         <div class="card">
           <h3>联动关系</h3>
           ${(character.synergies || []).map(syn => `
             <div style="margin-bottom:10px;">
-              <strong>与 ${syn.other_character_name} 联动</strong>
-              <p style="font-size:13px; color:#ccc;">触发条件：${syn.trigger_condition}</p>
-              <p style="font-size:13px; color:#ccc;">增益效果：${syn.buff_effect}</p>
-              <p style="font-size:12px; color:#aaa;">联动评分：${syn.synergy_score} - ${syn.description}</p>
+              <strong>与 ${syn.other_character_name || syn.name} 联动</strong>
+              <p style="font-size:13px; color:#ccc;">触发条件：${syn.trigger_condition || '无'}</p>
+              <p style="font-size:13px; color:#ccc;">增益效果：${syn.buff_effect || '无'}</p>
+              <p style="font-size:12px; color:#aaa;">联动评分：${syn.synergy_score || 'N/A'} - ${syn.description || ''}</p>
             </div>
           `).join('') || '<p>暂无联动数据</p>'}
         </div>
@@ -277,106 +383,268 @@
       showTab('characters');
     }
 
-    function loadGlossary() {
+    // ========== 术语与AI模块 ==========
+    function renderGlossary() {
       const list = document.getElementById('glossary-list');
-      if (!data.glossary || data.glossary.length === 0) {
-        list.innerHTML = '<p>暂无术语数据</p>';
-        return;
-      }
-      list.innerHTML = data.glossary.map(t => `
+      const terms = baseData.glossary || [];
+      list.innerHTML = terms.map(t => `
         <div class="card">
           <strong style="font-size:16px; color:#fff;">${t.term}</strong>
-          <span class="tag">${t.category}</span>
-          <p style="margin-top:5px;">${t.explanation}</p>
+          <span class="tag">${t.category || '通用'}</span>
+          <p style="margin-top:5px;">${t.explanation || '暂无解释'}</p>
         </div>
-      `).join('');
+      `).join('') || '<p>暂无术语数据</p>';
     }
 
-    function loadAIModules() {
+    function renderAIModules() {
       const list = document.getElementById('ai-modules-list');
-      if (!data.ai_modules || data.ai_modules.length === 0) {
-        list.innerHTML = '<p>暂无AI模块数据</p>';
-        return;
-      }
-      list.innerHTML = data.ai_modules.map(m => `
+      const modules = baseData.ai_modules || [];
+      list.innerHTML = modules.map(m => `
         <div class="card">
           <h3>${m.module_name}</h3>
-          <p><strong>解锁条件：</strong>${m.unlock_condition}</p>
-          <p><strong>对局效果：</strong>${m.battle_effect}</p>
-          <p><strong>升级路径：</strong>${m.upgrade_path}</p>
+          <p><strong>解锁条件：</strong>${m.unlock_condition || '无'}</p>
+          <p><strong>对局效果：</strong>${m.battle_effect || '无'}</p>
+          <p><strong>升级路径：</strong>${m.upgrade_path || '无'}</p>
           <p><strong>最佳搭配：</strong>${(m.best_synergy || []).join(', ')}</p>
-          <p>${m.description}</p>
+          <p>${m.description || ''}</p>
         </div>
-      `).join('');
+      `).join('') || '<p>暂无AI模块数据</p>';
     }
 
-    function loadVersion() {
-      const info = document.getElementById('version-info');
-      if (!data.version) {
-        info.innerHTML = '<p>暂无版本信息</p>';
-        return;
+    function renderUpdate() {
+      const info = document.getElementById('update-info');
+      const stored = getStoredUpdate();
+      if (stored) {
+        info.innerHTML = `
+          <div class="card">
+            <h3>版本 ${stored.version || '未知'}</h3>
+            <p style="font-size:12px;">更新时间：${stored.update_time || '刚刚'}</p>
+            <p>${stored.summary || '暂无情报'}</p>
+            ${stored.hot_characters ? `<p><strong>热门角色：</strong>${stored.hot_characters.join('、')}</p>` : ''}
+          </div>
+        `;
+      } else {
+        info.innerHTML = '<p>暂无更新数据，点击上方按钮获取最新情报。</p>';
       }
-      info.innerHTML = `
-        <div class="card">
-          <h3>版本 ${data.version.version}</h3>
-          <p style="font-size:12px;">更新时间：${data.version.update_time}</p>
-          <p>${data.version.change_log || '暂无更新日志'}</p>
-        </div>
-      `;
+    }
+
+    // ========== AI 相关 ==========
+    function setChatMode(mode) {
+      currentChatMode = mode;
+      document.getElementById('mode-tactics').classList.toggle('active', mode === 'tactics');
+      document.getElementById('mode-character').classList.toggle('active', mode === 'character');
+      document.getElementById('question-input').placeholder = 
+        mode === 'tactics' ? '例如：楚子航配夏弥，带这样启灵和龙纹效果如何？' : '输入角色名，如：楚子航';
     }
 
     async function sendQuestion() {
       const input = document.getElementById('question-input');
       const question = input.value.trim();
       if (!question) return;
-      if (!API_KEY) {
-        alert('请先设置 DeepSeek API Key（可以在页面底部添加）');
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        alert('请先在页面底部设置 DeepSeek API Key');
         return;
       }
       const chatBox = document.getElementById('chat-box');
       chatBox.innerHTML += `<div class="chat-message user-msg">${question}</div>`;
       input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
+
       try {
-        const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        if (currentChatMode === 'character') {
+          await handleCharacterQuery(question, chatBox);
+        } else {
+          await handleTacticsQuery(question, chatBox);
+        }
+      } catch (e) {
+        chatBox.innerHTML += `<div class="chat-message ai-msg">错误：${e.message}</div>`;
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // 战术提问：使用极严格 System Prompt
+    async function handleTacticsQuery(question, chatBox) {
+      const systemPrompt = `你是《龙族：卡塞尔之门》官方攻略数据库的AI。你必须遵守以下铁律：
+1. 只回答与《龙族：卡塞尔之门》游戏内角色、技能、启灵、龙纹、AI模块、阵容搭配、战斗机制相关的内容。
+2. 回答必须基于事实，不得编造游戏内不存在的数据。若不确定，请明确说“暂无准确数据”。
+3. 回答需结构化：先结论，再分析，最后给替代表述。
+4. 涉及具体搭配时，需分别说明PVE和PVP表现，并量化增益效果（如+15%暴击）。
+5. 如果问题涉及多个角色，必须明确指出联动触发条件和收益。
+6. 保持专业、简洁、无冗余。
+7. 绝不使用模棱两可的词语，如“可能”、“大概”。`;
+      const res = await fetch(DEEPSEEK_API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${getApiKey()}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: question }
+          ],
+          temperature: 0.3
+        })
+      });
+      const data = await res.json();
+      const answer = data.choices?.[0]?.message?.content || 'AI无响应';
+      chatBox.innerHTML += `<div class="chat-message ai-msg">${answer}</div>`;
+    }
+
+    // 角色查询：优先本地，无则调用AI生成JSON并缓存
+    async function handleCharacterQuery(question, chatBox) {
+      const name = question.replace(/^查询[：:]\s*/, '').trim();
+      const existing = allCharacters.find(c => c.name === name);
+      if (existing) {
+        chatBox.innerHTML += `<div class="chat-message ai-msg">已在本地库中找到「${name}」，点击下方卡片查看详情。</div>`;
+        showCharacterDetail(name);
+        return;
+      }
+
+      chatBox.innerHTML += `<div class="chat-message ai-msg">未找到本地数据，正在请求 AI 生成「${name}」的详细档案...</div>`;
+
+      const systemPrompt = `你是《龙族：卡塞尔之门》游戏的官方数据生成器。用户会提供一个角色名，你必须返回一个严格的JSON对象，格式如下：
+{
+  "name": "角色名",
+  "rarity": "SSR/SR/R",
+  "role_type": "输出/坦克/辅助/控制等",
+  "tags": ["标签1", "标签2"],
+  "description": "角色背景简介",
+  "plain_analysis": "角色定位和养成建议的通俗解释",
+  "pve_rating": 9.0,
+  "pvp_rating": 8.5,
+  "skills": [
+    {
+      "name": "技能名",
+      "official_desc": "官方技能描述",
+      "plain_desc": "技能效果白话解析",
+      "mechanics": ["机制1", "机制2"],
+      "pve_score": 9.0,
+      "pvp_score": 8.0
+    }
+  ],
+  "recommended_awakening": ["启灵1", "启灵2"],
+  "recommended_dragon_marks": ["龙纹1", "龙纹2"],
+  "synergies": [
+    {
+      "other_character_name": "联动角色名",
+      "trigger_condition": "联动触发条件",
+      "buff_effect": "具体增益效果",
+      "synergy_score": 9.0,
+      "description": "联动说明"
+    }
+  ]
+}
+请确保所有字段完整，不要输出JSON以外的任何文本。只输出JSON。`;
+      const res = await fetch(DEEPSEEK_API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${getApiKey()}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: name }
+          ],
+          temperature: 0.2,
+          response_format: { type: 'json_object' }
+        })
+      });
+      const data = await res.json();
+      const content = data.choices?.[0]?.message?.content;
+      if (!content) {
+        chatBox.innerHTML += `<div class="chat-message ai-msg">AI生成失败，请检查API Key或稍后再试。</div>`;
+        return;
+      }
+      let parsed;
+      try {
+        parsed = JSON.parse(content);
+      } catch {
+        chatBox.innerHTML += `<div class="chat-message ai-msg">AI返回格式异常，请手动重试。</div>`;
+        return;
+      }
+      // 保存到自定义缓存
+      const custom = getStoredCharacters();
+      custom.push(parsed);
+      saveStoredCharacters(custom);
+      mergeCharacters();
+      chatBox.innerHTML += `<div class="chat-message ai-msg">已生成并缓存「${parsed.name}」的数据！</div>`;
+      showCharacterDetail(parsed.name);
+    }
+
+    // 一键更新：AI总结当前版本情报
+    async function fetchLatestUpdate() {
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        alert('请先设置 DeepSeek API Key');
+        return;
+      }
+      const btn = document.querySelector('#update-tab button');
+      btn.disabled = true;
+      btn.textContent = '获取中...';
+      const systemPrompt = `你是《龙族：卡塞尔之门》的游戏攻略情报官。请基于你的知识，输出一个JSON对象，包含以下字段：
+{
+  "version": "当前版本号（如1.2.0）",
+  "update_time": "当前日期",
+  "summary": "当前版本环境总评和新角色/新系统简述",
+  "hot_characters": ["热门角色1","热门角色2","热门角色3"]
+}
+严格输出JSON，不要包含任何额外文字。`;
+      try {
+        const res = await fetch(DEEPSEEK_API_URL, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${API_KEY}`,
+            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             model: 'deepseek-chat',
             messages: [
-              { role: 'system', content: '你是《龙族：卡塞尔之门》的攻略助手，请基于你的知识回答用户问题，如果不知道就说不知道。' },
-              { role: 'user', content: question }
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: '请总结当前版本环境与热门角色' }
             ],
-            temperature: 0.7
+            temperature: 0.3,
+            response_format: { type: 'json_object' }
           })
         });
-        const result = await res.json();
-        const answer = result.choices?.[0]?.message?.content || 'AI暂时无法回答';
-        chatBox.innerHTML += `<div class="chat-message ai-msg">${answer}</div>`;
+        const data = await res.json();
+        const content = data.choices?.[0]?.message?.content;
+        if (content) {
+          const parsed = JSON.parse(content);
+          saveStoredUpdate(parsed);
+          renderUpdate();
+          alert('更新成功！');
+        } else {
+          alert('获取失败，请稍后重试');
+        }
       } catch (e) {
-        chatBox.innerHTML += `<div class="chat-message ai-msg">网络错误，请重试</div>`;
+        alert('获取失败：' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔥 一键获取最新情报';
       }
-      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    (async function() {
+    // ========== 初始化 ==========
+    window.addEventListener('DOMContentLoaded', async () => {
+      setChatMode('tactics');
       await fetchData();
-      loadCharacters();
+      // 添加 API Key 设置入口
       const container = document.querySelector('.container');
       const keyDiv = document.createElement('div');
-      keyDiv.style.marginTop = '20px';
       keyDiv.innerHTML = `
         <details>
           <summary style="cursor:pointer;color:#aaa;">设置 DeepSeek API Key（点击展开）</summary>
-          <input type="text" id="api-key-input" placeholder="输入你的 DeepSeek API Key（sk-开头）" value="${API_KEY}">
+          <input type="text" id="api-key-input" placeholder="输入你的 DeepSeek API Key（sk-开头）" value="${getApiKey()}">
           <button onclick="saveApiKey()">保存</button>
         </details>
       `;
       container.appendChild(keyDiv);
-    })();
+    });
 
     function saveApiKey() {
       const key = document.getElementById('api-key-input').value.trim();
@@ -386,3 +654,6 @@
   </script>
 </body>
 </html>
+```
+
+---
