@@ -1,86 +1,346 @@
+```json
 {
   "characters": [
     {
-      "id": 1,
       "name": "楚子航",
       "rarity": "SSR",
       "role_type": "输出",
-      "tags": ["高爆发", "单体"],
-      "description": "狮心会会长，言灵·君焰。",
-      "plain_analysis": "强力火系输出，大招能造成大量单体伤害，适合作为主C培养。",
-      "pve_rating": 9.0,
-      "pvp_rating": 8.5,
+      "tags": ["火系", "高爆发", "单体"],
+      "description": "狮心会会长，言灵·君焰，拥有极强的单体爆发能力。",
+      "plain_analysis": "顶级火系主C，大招伤害极高，适合PVE开荒和PVP秒杀核心。",
+      "pve_rating": 9.5,
+      "pvp_rating": 9.0,
       "skills": [
         {
           "name": "君焰",
-          "official_desc": "造成300%攻击力的火属性伤害，并点燃目标。",
-          "plain_desc": "打一下很痛，还能让敌人持续掉血。",
+          "official_desc": "对敌方单体造成320%攻击力的火属性伤害，并附加【点燃】效果。",
+          "plain_desc": "单体超高伤害，还能让敌人持续掉血。",
           "mechanics": ["点燃", "高倍率"],
-          "pve_score": 9.5,
-          "pvp_score": 8.5
+          "pve_score": 9.6,
+          "pvp_score": 9.0
+        },
+        {
+          "name": "村雨",
+          "official_desc": "提升自身30%暴击率，持续2回合。",
+          "plain_desc": "大幅提升暴击，配合君焰打出爆炸输出。",
+          "mechanics": ["暴击提升"],
+          "pve_score": 8.8,
+          "pvp_score": 9.2
         }
       ],
+      "recommended_awakening": ["炎之怒", "暴击强化"],
+      "recommended_dragon_marks": ["火龙纹章", "破军纹章"],
       "synergies": [
         {
           "other_character_name": "夏弥",
           "trigger_condition": "楚子航与夏弥同时上场时触发。",
-          "buff_effect": "楚子航暴击率提升15%，夏弥技能冷却减少1回合。",
-          "synergy_score": 9.0,
-          "description": "两人配合默契，输出和辅助相得益彰。"
+          "buff_effect": "楚子航暴击率额外+15%，夏弥技能冷却-1回合。",
+          "synergy_score": 9.2,
+          "description": "官方CP联动，输出与辅助完美配合。"
         }
       ]
     },
     {
-      "id": 2,
       "name": "夏弥",
       "rarity": "SSR",
       "role_type": "辅助",
-      "tags": ["增伤", "控制"],
-      "description": "神秘少女，真实身份为大地与山之王。",
-      "plain_analysis": "风系辅助，能为队友增加伤害，并有一定控制能力。",
-      "pve_rating": 8.0,
-      "pvp_rating": 9.0,
+      "tags": ["风系", "增伤", "控制"],
+      "description": "真实身份为大地与山之王，擅长辅助队友并削弱敌人。",
+      "plain_analysis": "顶尖增伤辅助，能提升全队攻击并附带控制效果。",
+      "pve_rating": 8.8,
+      "pvp_rating": 9.3,
       "skills": [
         {
           "name": "风王之瞳",
           "official_desc": "提升全体队友20%攻击力，持续2回合。",
-          "plain_desc": "全队攻击力上升，持续两回合。",
+          "plain_desc": "全队攻击力上升，简单粗暴。",
           "mechanics": ["群体增益"],
           "pve_score": 8.5,
           "pvp_score": 9.0
+        },
+        {
+          "name": "土之禁忌",
+          "official_desc": "对敌方全体造成60%风属性伤害，并降低20%防御。",
+          "plain_desc": "群体伤害并破防，提升后续输出。",
+          "mechanics": ["群体减防"],
+          "pve_score": 8.0,
+          "pvp_score": 8.8
         }
       ],
+      "recommended_awakening": ["风之祝福", "减防强化"],
+      "recommended_dragon_marks": ["风龙纹章", "破甲纹章"],
       "synergies": [
         {
           "other_character_name": "楚子航",
-          "trigger_condition": "楚子航与夏弥同时上场时触发。",
-          "buff_effect": "楚子航暴击率提升15%，夏弥技能冷却减少1回合。",
-          "synergy_score": 9.0,
-          "description": "两人配合默契，输出和辅助相得益彰。"
+          "trigger_condition": "夏弥与楚子航同时上场时触发。",
+          "buff_effect": "夏弥技能冷却-1回合，楚子航暴击率+15%。",
+          "synergy_score": 9.2,
+          "description": "官方CP联动，辅助与输出互相增益。"
+        }
+      ]
+    },
+    {
+      "name": "路明非",
+      "rarity": "SSR",
+      "role_type": "输出",
+      "tags": ["龙裔", "成长型", "爆发"],
+      "description": "本书主角，言灵·黑王之怒，拥有毁灭性力量。",
+      "plain_analysis": "后期爆发极高的成长型角色，前期较弱，适合PVE养成。",
+      "pve_rating": 8.5,
+      "pvp_rating": 8.0,
+      "skills": [
+        {
+          "name": "黑王之怒",
+          "official_desc": "对敌方全体造成200%攻击力的暗属性伤害，自身每有1层【龙裔】，伤害+10%。",
+          "plain_desc": "越叠层越痛，需要时间成型。",
+          "mechanics": ["叠加增伤", "群体伤害"],
+          "pve_score": 9.0,
+          "pvp_score": 7.5
+        }
+      ],
+      "recommended_awakening": ["龙裔觉醒", "愤怒强化"],
+      "recommended_dragon_marks": ["黑龙纹章", "成长纹章"],
+      "synergies": [
+        {
+          "other_character_name": "诺诺",
+          "trigger_condition": "路明非与诺诺同时上场时触发。",
+          "buff_effect": "路明非获得龙裔层数时，额外回复10%生命。",
+          "synergy_score": 8.0,
+          "description": "学姐照顾学弟，提升生存能力。"
+        }
+      ]
+    },
+    {
+      "name": "诺诺",
+      "rarity": "SSR",
+      "role_type": "辅助",
+      "tags": ["治疗", "护盾", "龙裔"],
+      "description": "卡塞尔学院执行部精英，言灵·镜中人。",
+      "plain_analysis": "强力治疗辅助，能提供护盾和回复，百搭型。",
+      "pve_rating": 9.0,
+      "pvp_rating": 8.5,
+      "skills": [
+        {
+          "name": "镜中人",
+          "official_desc": "为全体友方施加相当于自身生命值25%的护盾，持续2回合。",
+          "plain_desc": "全队护盾，防秒杀。",
+          "mechanics": ["护盾"],
+          "pve_score": 8.8,
+          "pvp_score": 8.5
+        }
+      ],
+      "recommended_awakening": ["生命强化", "护盾精通"],
+      "recommended_dragon_marks": ["水龙纹章", "守护纹章"],
+      "synergies": [
+        {
+          "other_character_name": "路明非",
+          "trigger_condition": "诺诺与路明非同时上场时触发。",
+          "buff_effect": "路明非生命值低于30%时，诺诺自动为其回复15%最大生命。",
+          "synergy_score": 8.0,
+          "description": "学姐的守护。"
+        }
+      ]
+    },
+    {
+      "name": "恺撒",
+      "rarity": "SSR",
+      "role_type": "坦克",
+      "tags": ["领袖", "嘲讽", "反击"],
+      "description": "学生会主席，言灵·镰鼬，贵族出身。",
+      "plain_analysis": "全能坦克，自带嘲讽和反击，PVP表现优秀。",
+      "pve_rating": 8.2,
+      "pvp_rating": 9.0,
+      "skills": [
+        {
+          "name": "镰鼬",
+          "official_desc": "嘲讽敌方全体，并提升自身30%防御，持续2回合。",
+          "plain_desc": "拉仇恨的同时变硬。",
+          "mechanics": ["嘲讽", "防御提升"],
+          "pve_score": 8.0,
+          "pvp_score": 9.0
+        }
+      ],
+      "recommended_awakening": ["防御强化", "反击专精"],
+      "recommended_dragon_marks": ["金狮纹章", "荆棘纹章"],
+      "synergies": [
+        {
+          "other_character_name": "芬格尔",
+          "trigger_condition": "恺撒与芬格尔同时上场时触发。",
+          "buff_effect": "恺撒受到攻击时，芬格尔有20%概率反击。",
+          "synergy_score": 7.5,
+          "description": "学生会组合，反击流。"
+        }
+      ]
+    },
+    {
+      "name": "芬格尔",
+      "rarity": "SR",
+      "role_type": "输出",
+      "tags": ["肉盾", "嘲讽", "爆发"],
+      "description": "前A级学生，搞笑担当，但实力不容小觑。",
+      "plain_analysis": "半肉半输出，能抗能打，适合新手过渡。",
+      "pve_rating": 7.8,
+      "pvp_rating": 7.5,
+      "skills": [
+        {
+          "name": "酒神",
+          "official_desc": "对敌方单体造成180%攻击力伤害，并回复自身20%生命。",
+          "plain_desc": "边打边回血，续航不错。",
+          "mechanics": ["回复"],
+          "pve_score": 7.5,
+          "pvp_score": 7.0
+        }
+      ],
+      "recommended_awakening": ["生命恢复", "伤害提升"],
+      "recommended_dragon_marks": ["岩龙纹章", "吸血纹章"],
+      "synergies": [
+        {
+          "other_character_name": "恺撒",
+          "trigger_condition": "芬格尔与恺撒同时上场时触发。",
+          "buff_effect": "芬格尔生命值低于50%时，下次攻击必暴击。",
+          "synergy_score": 7.0,
+          "description": "垂死反击。"
+        }
+      ]
+    },
+    {
+      "name": "绘梨衣",
+      "rarity": "SSR",
+      "role_type": "输出",
+      "tags": ["火系", "群体", "控制"],
+      "description": "上杉家家主，言灵·审判，拥有灭世之力。",
+      "plain_analysis": "高端群体输出，附带控制效果，PVE和PVP都强势。",
+      "pve_rating": 9.2,
+      "pvp_rating": 9.0,
+      "skills": [
+        {
+          "name": "审判",
+          "official_desc": "对敌方全体造成150%攻击力的火属性伤害，并有40%概率眩晕。",
+          "plain_desc": "群体伤害 + 概率眩晕，控场能力强。",
+          "mechanics": ["群体眩晕"],
+          "pve_score": 9.0,
+          "pvp_score": 9.2
+        }
+      ],
+      "recommended_awakening": ["火焰精通", "控制强化"],
+      "recommended_dragon_marks": ["红莲纹章", "眩晕纹章"],
+      "synergies": [
+        {
+          "other_character_name": "路明非",
+          "trigger_condition": "绘梨衣与路明非同时上场时触发。",
+          "buff_effect": "绘梨衣攻击力+15%，路明非获得护盾。",
+          "synergy_score": 8.8,
+          "description": "宿命搭档。"
+        }
+      ]
+    },
+    {
+      "name": "零",
+      "rarity": "SR",
+      "role_type": "辅助",
+      "tags": ["暗系", "减益", "破防"],
+      "description": "学院执行部，言灵·无口。",
+      "plain_analysis": "减益辅助，能削弱敌方防御和攻击变控。",
+      "pve_rating": 8.0,
+      "pvp_rating": 8.2,
+      "skills": [
+        {
+          "name": "无口",
+          "official_desc": "降低敌方全体20%攻击力，持续2回合。",
+          "plain_desc": "削弱对方输出，保护己方。",
+          "mechanics": ["攻击削减"],
+          "pve_score": 8.0,
+          "pvp_score": 8.5
+        }
+      ],
+      "recommended_awakening": ["虚弱强化", "破防专精"],
+      "recommended_dragon_marks": ["暗龙纹章", "减益纹章"],
+      "synergies": [
+        {
+          "other_character_name": "诺诺",
+          "trigger_condition": "零与诺诺同时上场时触发。",
+          "buff_effect": "被零削弱的敌人，诺诺对其伤害+10%。",
+          "synergy_score": 7.8,
+          "description": "辅助联动。"
+        }
+      ]
+    },
+    {
+      "name": "酒德亚纪",
+      "rarity": "SR",
+      "role_type": "辅助",
+      "tags": ["治疗", "净化", "风系"],
+      "description": "学院后勤部，言灵·疗愈。",
+      "plain_analysis": "纯治疗辅助，能解控，PVE必备。",
+      "pve_rating": 8.5,
+      "pvp_rating": 7.5,
+      "skills": [
+        {
+          "name": "疗愈之光",
+          "official_desc": "回复全体友方15%最大生命，并净化1个负面状态。",
+          "plain_desc": "全队回血+解debuff。",
+          "mechanics": ["治疗", "净化"],
+          "pve_score": 8.8,
+          "pvp_score": 7.0
+        }
+      ],
+      "recommended_awakening": ["治疗提升", "净化强化"],
+      "recommended_dragon_marks": ["风龙纹章", "生命纹章"],
+      "synergies": [
+        {
+          "other_character_name": "恺撒",
+          "trigger_condition": "酒德亚纪与恺撒同时上场时触发。",
+          "buff_effect": "恺撒生命值低于30%时，酒德亚纪治疗量+20%。",
+          "synergy_score": 7.5,
+          "description": "学生会救援。"
+        }
+      ]
+    },
+    {
+      "name": "源稚生",
+      "rarity": "SSR",
+      "role_type": "输出",
+      "tags": ["光系", "单体", "斩杀"],
+      "description": "源氏家族少主，言灵·皇。",
+      "plain_analysis": "光系单体爆发，带斩杀效果，PVE打BOSS强力。",
+      "pve_rating": 9.0,
+      "pvp_rating": 8.0,
+      "skills": [
+        {
+          "name": "皇",
+          "official_desc": "对敌方单体造成280%攻击力的光属性伤害，若目标生命低于30%，则额外造成50%伤害。",
+          "plain_desc": "打残血角色超痛。",
+          "mechanics": ["斩杀", "高倍率"],
+          "pve_score": 9.3,
+          "pvp_score": 8.5
+        }
+      ],
+      "recommended_awakening": ["光之裁决", "斩杀强化"],
+      "recommended_dragon_marks": ["光龙纹章", "暴击纹章"],
+      "synergies": [
+        {
+          "other_character_name": "源稚女",
+          "trigger_condition": "源稚生与源稚女同时上场时触发。",
+          "buff_effect": "源稚生攻击力+20%，源稚女技能冷却-1。",
+          "synergy_score": 8.9,
+          "description": "兄弟联手。"
         }
       ]
     }
   ],
   "glossary": [
-    {
-      "term": "言灵",
-      "category": "战斗",
-      "explanation": "角色特有的超自然能力，相当于技能。",
-      "related_to": ["所有角色"]
-    },
-    {
-      "term": "血统",
-      "category": "角色",
-      "explanation": "角色的血脉等级，影响基础属性。",
-      "related_to": ["角色养成"]
-    }
+    {"term": "言灵", "category": "战斗", "explanation": "角色特有的超自然能力，相当于技能。", "related_to": ["所有角色"]},
+    {"term": "血统", "category": "角色", "explanation": "角色的血脉等级，影响基础属性。", "related_to": ["角色养成"]},
+    {"term": "启灵", "category": "养成", "explanation": "提升角色能力的觉醒材料或技能点，可强化角色。", "related_to": ["角色加成"]},
+    {"term": "龙纹", "category": "养成", "explanation": "刻在角色身上的纹章，提供额外属性加成。", "related_to": ["装备"]},
+    {"term": "AI模块", "category": "系统", "explanation": "游戏内人工智能系统，对局内提供战术支持。", "related_to": ["诺玛", "对局影响"]}
   ],
   "ai_modules": [
     {
       "module_name": "诺玛",
       "unlock_condition": "完成主线第二章解锁",
-      "battle_effect": "对局内自动分析敌方弱点，提升全队破甲效率。",
-      "upgrade_path": "使用AI核心升级，提升分析速度。",
+      "battle_effect": "对局内自动分析敌方弱点，提升全队破甲效率10%。",
+      "upgrade_path": "使用AI核心升级，提升分析速度与效果。",
       "best_synergy": ["楚子航", "夏弥"],
       "description": "游戏内人工智能辅助系统，可在战斗中提供战术建议。"
     }
@@ -88,6 +348,7 @@
   "version": {
     "version": "1.0.0",
     "update_time": "2024-01-01",
-    "change_log": "初始版本，包含示例角色数据。"
+    "change_log": "初始版本，包含核心角色数据。"
   }
 }
+```
